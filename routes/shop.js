@@ -5,7 +5,7 @@ const dir = require("../utility/path");
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  res.sendFile(path.join(dir, "../", "views", "shop.html"));
+  res.sendFile(path.join(dir, "views", "shop.html"));
 });
 
 module.exports = router;
