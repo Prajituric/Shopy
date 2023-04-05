@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
+const dir = require("./utility/path");
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "error404.html"));
+  res.status(404).sendFile(path.join(dir, "views", "error404.html"));
 });
 
 app.listen(3000);
