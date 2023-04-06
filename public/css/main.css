@@ -43,3 +43,59 @@ main {
 .main-header-li a.active {
   color: #3e00a1;
 }
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.card-header,
+.card-content {
+  padding: 1rem;
+}
+
+.card-header h1,
+.card-content h1,
+.card-content h2,
+.card-content p {
+  margin: 0;
+}
+
+.card-image {
+  width: 100%;
+}
+
+.card-image img {
+  width: 100%;
+}
+
+.card-actions {
+  padding: 1rem;
+  text-align: center;
+}
+
+.card-actions button,
+.card-actions a {
+  margin: 0 0.25rem;
+}
+
+.btn {
+  font: inherit;
+  border: 1px solid #00695c;
+  color: #00695c;
+  background: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btn:hover,
+.btn:active {
+  background-color: #00695c;
+  color: white;
+}
