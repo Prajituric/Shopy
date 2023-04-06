@@ -1,17 +1,24 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   padding: 0;
   margin: 0;
-  font-family: sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 main {
   padding: 1rem;
+  margin: auto;
 }
 
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: #dbc441;
+  background-color: #00695c;
   padding: 0 1.5rem;
 }
 
@@ -35,13 +42,13 @@ main {
 
 .main-header-li a {
   text-decoration: none;
-  color: black;
+  color: white;
 }
 
 .main-header-li a:hover,
 .main-header-li a:active,
 .main-header-li a.active {
-  color: #3e00a1;
+  color: #ffeb3b;
 }
 
 .grid {
