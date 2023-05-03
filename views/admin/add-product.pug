@@ -9,14 +9,13 @@ block content
         form.product-form(action="/admin/add-product", method="POST")
             .form-control
                 label(for="title") Title
-                input(type="text", name="title")#title    
-        form.product-form(action="/admin/add-product", method="POST")
+                input(type="text", name="title")#title   
             .form-control
                 label(for="imageUrl") Image URL
-                input(type="text", name="imageUrl")#image    
+                input(type="text", name="imageUrl")#imageUrl    
             .form-control
                 label(for="price") Price
-                input(type="number", name="price")#price
+                input(type="number", name="price", step='0.01')#price
             .form-control
                 label(for="description") Description
                 textarea(name="description", rows="5")#description    

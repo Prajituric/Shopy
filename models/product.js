@@ -10,14 +10,14 @@ const p = path.join(
 const getProductsFromFile = (cb) => {
   fs.readFile(p, (err, fileContent) => {
     if (err) {
-      return cb([]);
+      cb([]);
     } else {
       cb(JSON.parse(fileContent));
     }
   });
 };
 
-module.exports = class Products {
+module.exports = class Product {
   constructor(title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
