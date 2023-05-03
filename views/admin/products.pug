@@ -1,0 +1,29 @@
+extends ../layouts/main-layout.pug 
+
+block styles
+    link(rel="stylesheet", href="/css/product.css")
+
+block content
+        main
+            if prod.length > 0 
+                .grid 
+                    each product in prod  
+                        article.card-product-item 
+                            header.card-header
+                                h1.product-title #{product.title}
+                            .card-image
+                                img(src=product.imageUrl)
+                            .card-content
+                                h2.product-price #{product.price}
+                                p.product-description #{product.description}
+                            .card-actions
+                                a.btn(href='/admin/edit-product') Edit
+                                 form(action="/admin/delete-product", method="POST")
+                                a.btn(type="submit") Delete
+            
+            else   
+                h1 No books found
+
+
+
+
