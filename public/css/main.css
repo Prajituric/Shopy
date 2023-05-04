@@ -10,6 +10,10 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
+form {
+  display: inline;
+}
+
 main {
   padding: 1rem;
   margin: auto;
@@ -194,11 +198,17 @@ a {
 }
 
 @media (min-width: 768px) {
-  .main-header__nav {
+  .main-head-nav {
     display: flex;
   }
 
   #side-menu-toggle {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-head-nav {
     display: none;
   }
 }
