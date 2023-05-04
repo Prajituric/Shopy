@@ -18,8 +18,7 @@ block content
                                 p.product-description #{product.description}
                             .card-actions
                                 a.btn(href=`/products/${product.id}`) Details
-                                form(action="/add-to-cart", method="POST")
-                                button.btn Add to Cart
+                                include ../layouts/add-to-cart.pug
                                 
             else   
                 h1 No books found

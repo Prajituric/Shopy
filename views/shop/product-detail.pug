@@ -3,5 +3,12 @@ extends ../layouts/main-layout.pug
 block styles
     link(rel="stylesheet", href="/css/product.css")
 
-    block content
-    h1 Nothing here
+block content
+    main.centered 
+        h1 #{product.title}
+        hr
+        img(src=product.imageUrl)
+        h2 #{product.price}
+        p #{product.description}
+        include ../layouts/add-to-cart.pug
+
