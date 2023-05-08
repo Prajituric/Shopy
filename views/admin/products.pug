@@ -5,24 +5,24 @@ block styles
 
 block content
         main
-            if prod.length > 0 
-                .grid 
-                    each product in prod  
-                        article.card-product-item 
-                            header.card-header
-                                h1.product-title #{product.title}
-                            .card-image
-                                img(src=product.imageUrl)
-                            .card-content
-                                h2.product-price #{product.price}
-                                p.product-description #{product.description}
-                            .card-actions
-                                a.btn(href='/admin/edit-product') Edit
-                                 form(action="/admin/delete-product", method="POST")
-                                a.btn(type="submit") Delete
-            
-            else   
-                h1 No books found
+            if prods.length > 0
+                .grid
+                    each product in prods
+                        article.card.product-item
+                            header.card__header
+                                h1.product-title <%= product.title %>
+                            div.card__image
+                                img(src=`${product.imageUrl}`, alt=`${product.title}`)
+                            div.card__content
+                                h2.product-price $<%= product.price %>
+                                p.product-description <%= product.description %>
+                            div.card-actions
+                                a.btn(href=`/admin/edit-product/${product.id}?edit=true`) Edit
+                                form(action='/admin/delete-product', method='POST')
+                                    input(type='hidden', name='productId', value=`${product.id}`)
+                                    button.btn(type='submit') Delete
+            else
+                h1 No Products Found!
 
 
 

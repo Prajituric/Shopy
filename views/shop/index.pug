@@ -1,14 +1,13 @@
 extends ../layouts/main-layout.pug 
 
-
 block styles
     link(rel="stylesheet", href="/css/product.css")
 
 block content
         main
-            if prod.length > 0 
+            if prods.length > 0 
                 .grid 
-                    each product in prod  
+                    each product in prods  
                         article.card-product-item 
                             header.card-header
                                 h1.product-title #{product.title}
@@ -18,7 +17,7 @@ block content
                                 h2.product-price #{product.price}
                                 p.product-description #{product.description}
                             .card-actions
-                                include ../layouts/add-to-cart.pug
+                                button.btn Add to Cart
             else   
                 h1 No books found
 

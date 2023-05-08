@@ -4,11 +4,10 @@ block styles
     link(rel="stylesheet", href="/css/product.css")
 
 block content
-    main.centered 
+    main.centered
         h1 #{product.title}
         hr
-        img(src=product.imageUrl)
+        div
+            img(src=product.imageUrl, alt=product.title)
         h2 #{product.price}
         p #{product.description}
-        include ../layouts/add-to-cart.pug
-
