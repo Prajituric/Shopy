@@ -2,6 +2,7 @@ extends ../layouts/main-layout.pug
 
 block styles
     link(rel="stylesheet", href="/css/product.css")
+    link(rel="stylesheet", href="/css/main.css")
 
 block content
         main
@@ -14,7 +15,7 @@ block content
                             div.card__image
                                 img(src=`${product.imageUrl}`, alt=`${product.title}`)
                             div.card__content
-                                h2.product-price #{product.price}
+                                h2.product-price $#{product.price}
                                 p.product-description #{product.description}
                             div.card-actions
                                 a.btn(href=`/admin/edit-product/${product.id}?edit=true`) Edit

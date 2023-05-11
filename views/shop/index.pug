@@ -14,7 +14,7 @@ block content
                             .card__image
                                 img(src=product.imageUrl)
                             .card__content
-                                h2.product-price #{product.price}
+                                h2.product-price $#{product.price}
                                 p.product-description #{product.description}
                             .card-actions
                                 include ../layouts/add-to-cart.pug

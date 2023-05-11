@@ -1,13 +1,15 @@
 extends ../layouts/main-layout.pug 
 
 block styles
-    link(rel="stylesheet", href="/css/product.css")
+    link(rel="stylesheet", href="/css/main.css")
+    link(rel="stylesheet", href="/css/main.css")
 
 block content
     main.centered
         h1 #{product.title}
         hr
-        img.card__image(src=product.imageUrl, alt=product.title)
-        h2 #{product.price}
+        .image
+            img(src=product.imageUrl, alt=product.title)
+        h2 $#{product.price}
         p #{product.description}
         include ../layouts/add-to-cart.pug
