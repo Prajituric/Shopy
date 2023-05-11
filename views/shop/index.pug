@@ -9,11 +9,11 @@ block content
                 .grid 
                     each product in prods  
                         article.card.product-item 
-                            header.card-header
+                            header.card__header
                                 h1.product-title #{product.title}
-                            .card-image
+                            .card__image
                                 img(src=product.imageUrl)
-                            .card-content
+                            .card__content
                                 h2.product-price #{product.price}
                                 p.product-description #{product.description}
                             .card-actions
