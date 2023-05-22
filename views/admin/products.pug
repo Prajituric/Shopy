@@ -18,9 +18,9 @@ block content
                                 h2.product-price $#{product.price}
                                 p.product-description #{product.description}
                             div.card-actions
-                                a.btn(href=`/admin/edit-product/${product.id}?edit=true`) Edit
+                                a.btn(href=`/admin/edit-product/${product._id}?edit=true`) Edit
                                 form(action='/admin/delete-product', method='POST')
-                                    input(type='hidden', name='productId', value=`${product.id}`)
+                                    input(type='hidden', name='productId', value=`${product._id}`)
                                     button.btn(type='submit') Delete
             else
                 h1 No Products Found!
