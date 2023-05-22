@@ -7,6 +7,8 @@ const errorController = require("./controllers/error");
 
 const mongoConnection = require("./utility/database").mongoConnection;
 
+const User = require("./models/user");
+
 const app = express();
 
 app.set("view engine", "pug");
@@ -19,13 +21,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
-  // User.findById(1)
-  //   .then(user => {
-  //     req.user = user;
-  //     next();
-  //   })
-  //   .catch(err => console.log(err));
-  next();
+  User.findById("646b12dcf9a7aab130dd051f")
+    .then((user) => {
+      req.user = new User(user.name, user.email, user.cart, user._id);
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use("/admin", adminRoutes);
