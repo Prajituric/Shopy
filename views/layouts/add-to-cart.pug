@@ -1,3 +1,5 @@
 form(action='/cart', method='post')
+  input(type="hidden", name='_csrf' value=`${csrfToken}`)
   button.btn(type='submit') Add to Cart
-  input(type='hidden', name='productId', value=`${product._id}`)
+  if product
+    input(type='hidden', name='productId', value=`${product._id}`)

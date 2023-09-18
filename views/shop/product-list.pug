@@ -12,13 +12,15 @@ block content
                             header.card__header
                                 h1.product-title #{product.title}
                             .card__image
-                                img(src=product.imageUrl)
+                                img(src=product.imageUrl, alt=product.title)
                             .card__content
                                 h2.product-price $#{product.price}
                                 p.product-description #{product.description}
                             .card-actions
                                 a.btn(href=`/products/${product._id}`) Details
-                                include ../layouts/add-to-cart.pug
+                                if isAuthenticated
+                                        include ../layouts/add-to-cart.pug
+
 
                                 
             else   

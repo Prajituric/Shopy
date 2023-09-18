@@ -9,14 +9,16 @@ block content
             ul.cart-item-list
                 each p in products
                     li.cart-item
-                        h1= p.title
+                        h1= p.productId.title
                         h2 Quantity: #{p.quantity}
                         form(action="/cart-delete-item", method="POST")
-                            input(type="hidden", value=p._id, name="productId")
+                            input(type="hidden", value=p.productId._id, name="productId")
+                            input(type="hidden" name="_csrf" value=csrfToken)
                             button.btn.danger(type="submit") Delete
             hr
             .centered               
                 form(action="/create-order", method="POST")
+                    input(type="hidden", name="_csrf", value=csrfToken)
                     button.btn(type="submit") Order Now!
         else
             h1 No Products in Cart!
