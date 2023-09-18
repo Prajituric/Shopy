@@ -12,5 +12,5 @@ block content
             img(src=product.imageUrl, alt=product.title)
         h2 $#{product.price}
         p #{product.description}
-        if isAuthenticated
+        if isAuth
             include ../layouts/add-to-cart.pug

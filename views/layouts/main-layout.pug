@@ -18,7 +18,7 @@ html(lang="en")
                         a(href='/', class=(path ==='/' ? 'active' : '')) Shop
                     li.main-header-li
                         a(href='/products', class=(path ==='/products' ? 'active' : '')) Products
-                    if isAuthenticated
+                    if isAuth
                         li.main-header-li
                             a(href='/cart', class=(path ==='/cart' ? 'active' : '')) Cart
                         li.main-header-li
@@ -28,7 +28,7 @@ html(lang="en")
                         li.main-header-li
                             a(href='/admin/products', class=(path ==='/admin/products' ? 'active' : '')) Admin Products
                 ul.main-header-ul    
-                    if !isAuthenticated
+                    if !isAuth
                         li.main-header-li
                             a(href='/login', class=(path === '/login' ? 'active' : '')) Login
                         li.main-header-li

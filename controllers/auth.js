@@ -66,7 +66,6 @@ exports.postSignup = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  // Check if the password and confirm password fields are empty
   if (!password || !confirmPassword) {
     req.flash(
       "error",
@@ -75,20 +74,17 @@ exports.postSignup = (req, res, next) => {
     return res.redirect("/signup");
   }
 
-  // Check if the password has a minimum of 8 characters
   if (password.length < 8 || confirmPassword.length < 8) {
     req.flash("error", "Password must have at least 8 characters.");
     return res.redirect("/signup");
   }
 
-  // Check if the email matches the format '<input>@<input>.com'
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailPattern.test(email)) {
     req.flash("error", "Invalid email format.");
     return res.redirect("/signup");
   }
 
-  // Check if password and confirm password match
   if (password !== confirmPassword) {
     req.flash(
       "error",
