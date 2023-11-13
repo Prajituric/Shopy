@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
 
+const crypto = require("crypto");
+
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
   if (message.length > 0) {
@@ -66,16 +68,17 @@ exports.postSignup = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  if (!password || !confirmPassword) {
+  // Input validation code
+  if (
+    !password ||
+    !confirmPassword ||
+    password.length < 8 ||
+    confirmPassword.length < 8
+  ) {
     req.flash(
       "error",
-      "You need to add both your password and confirm your password."
+      "Invalid password. Password must have at least 8 characters."
     );
-    return res.redirect("/signup");
-  }
-
-  if (password.length < 8 || confirmPassword.length < 8) {
-    req.flash("error", "Password must have at least 8 characters.");
     return res.redirect("/signup");
   }
 
@@ -86,10 +89,7 @@ exports.postSignup = (req, res, next) => {
   }
 
   if (password !== confirmPassword) {
-    req.flash(
-      "error",
-      "Passwords do not match. Please ensure they are the same."
-    );
+    req.flash("error", "Passwords do not match.");
     return res.redirect("/signup");
   }
 
@@ -99,22 +99,27 @@ exports.postSignup = (req, res, next) => {
         req.flash("error", "Your e-mail is already in use.");
         return res.redirect("/signup");
       }
+
       return bcrypt
         .hash(password, 12)
         .then((hashedPassword) => {
+          const verificationToken = crypto.randomBytes(32).toString("hex");
           const user = new User({
             email: email,
             password: hashedPassword,
             cart: { items: [] },
+            isVerified: false, // Set the verification status to false initially
+            verificationToken: verificationToken, // Save the verification token
           });
           return user.save();
         })
-        .then((result) => {
-          res.redirect("/login");
+        .then(() => {
+          return res.redirect("/login");
         });
     })
     .catch((err) => {
       console.log(err);
+      res.redirect("/signup");
     });
 };
 

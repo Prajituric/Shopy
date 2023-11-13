@@ -97,13 +97,13 @@ form {
 .mobile-nav {
   width: 30rem;
   height: 100vh;
-  max-width: 90%;
+  max-width: 80%;
   position: fixed;
   left: 0;
   top: 0;
-  background: white;
+  background: rgb(217, 209, 209);
   z-index: 10;
-  padding: 2rem 1rem 1rem 2rem;
+  padding: 2rem 0.2rem 0.2rem 2rem;
   transform: translateX(-100%);
   transition: transform 0.3s ease-out;
 }
@@ -128,16 +128,26 @@ form {
 .mobile-nav__item a {
   text-decoration: none;
   color: black;
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 0.5rem 2rem;
 }
 
 .mobile-nav__item a:active,
 .mobile-nav__item a:hover,
-.mobile-nav__item a.active {
+.mobile-nav__item a.active,
+.mobile-nav__item button:hover {
   background: #00695c;
   color: white;
   border-radius: 3px;
+}
+
+.decor {
+  background: #14b8a5;
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  padding: 0.5rem 2rem;
+  text-decoration: none;
 }
 
 #side-menu-toggle {

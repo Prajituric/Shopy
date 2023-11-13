@@ -1,5 +1,6 @@
 const Product = require("../models/product");
 const Order = require("../models/order");
+const mongoose = require("mongoose");
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -18,8 +19,15 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
+  if (!mongoose.Types.ObjectId.isValid(prodId)) {
+    return res.redirect("/");
+  }
   Product.findById(prodId)
     .then((product) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+
       res.render("shop/product-detail", {
         product: product,
         pageTitle: product.title,
