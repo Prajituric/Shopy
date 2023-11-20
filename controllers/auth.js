@@ -129,3 +129,17 @@ exports.postLogout = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+exports.getResetPw = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render("auth/resetpw", {
+    path: "/resetpw",
+    pageTitle: "Reset Password",
+    errorMessage: message,
+  });
+};
