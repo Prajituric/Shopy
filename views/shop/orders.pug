@@ -11,7 +11,10 @@ block content
             ul.orders
                 each order in orders
                     li.orders-item
-                        h1 # #{order._id}
+                        h1.end Order No. # #{order._id} 
+                        br
+                        h1 Order Date - #{formatShortDate(order.createdAt)}
                         ul.orders-products
                             each p in order.products
-                                li.orders-product-item #{p.product.title} (#{p.quantity})
+                                li.orders-product-item #{p.product.title} (#{p.quantity}) 
+                        h3.end Total Price: $#{calculateTotalPrice(order.products)}

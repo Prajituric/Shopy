@@ -9,6 +9,9 @@ block content
         if errorMessage
             div.user-message.user-message--error= errorMessage
 
+        if successMessage
+            div.user-messageS.user-message--succes= successMessage
+
         form.login-form(action="/login", method="POST")
             div.form-control
                 label(for="email") E-Mail
@@ -19,5 +22,5 @@ block content
             input(type="hidden", name="_csrf", value=csrfToken)
             button.btn(type="submit") Login
         div.centered
-            a(href="/resetpw") Reset PW
+            a.reset(href="/resetpw") Reset PW
                     

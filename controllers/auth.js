@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/user");
-
 const crypto = require("crypto");
 
 exports.getLogin = (req, res, next) => {
@@ -93,34 +92,40 @@ exports.postSignup = (req, res, next) => {
     return res.redirect("/signup");
   }
 
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        req.flash("error", "Your e-mail is already in use.");
-        return res.redirect("/signup");
-      }
+  User.findOne({ email: email }).then((userDoc) => {
+    if (userDoc) {
+      req.flash("error", "Your e-mail is already in use.");
+      return res.redirect("/signup");
+    }
 
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          const verificationToken = crypto.randomBytes(32).toString("hex");
-          const user = new User({
-            email: email,
-            password: hashedPassword,
-            cart: { items: [] },
-            isVerified: false, // Set the verification status to false initially
-            verificationToken: verificationToken, // Save the verification token
-          });
-          return user.save();
-        })
-        .then(() => {
-          return res.redirect("/login");
+    return bcrypt
+      .hash(password, 12)
+      .then((hashedPassword) => {
+        const verificationToken = crypto.randomBytes(32).toString("hex");
+        const user = new User({
+          email: email,
+          password: hashedPassword,
+          cart: { items: [] },
+          isVerified: false, 
+          verificationToken: verificationToken, 
         });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.redirect("/signup");
-    });
+        return user.save();
+      })
+      .then(() => {
+        const successMessage = "Sign-up successful! Please log in.";
+        req.flash("success", successMessage);
+
+        res.render("auth/login", {
+          path: "/login",
+          pageTitle: "Login",
+          errorMessage: null,
+          successMessage: req.flash("success")[0], 
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 };
 
 exports.postLogout = (req, res, next) => {

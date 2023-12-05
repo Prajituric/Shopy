@@ -81,5 +81,49 @@ userSchema.methods.removeFromCart = function (productId) {
   this.cart.items = updatedCartItems;
   return this.save();
 };
+userSchema.methods.removeFromCart = function (productId) {
+  const updatedCartItems = [...this.cart.items];
+  const cartItemIndex = updatedCartItems.findIndex((item) => {
+    return item.productId.toString() === productId.toString();
+  });
+
+  if (cartItemIndex >= 0) {
+    updatedCartItems.splice(cartItemIndex, 1);
+  } else {
+    console.log("Item not found in cart.");
+  }
+
+  this.cart.items = updatedCartItems;
+  return this.save();
+};
+
+userSchema.methods.updateCartItemQuantity = function (productId, action) {
+  const cartItem = this.cart.items.find(
+    (item) => item.productId.toString() === productId.toString()
+  );
+
+  if (!cartItem) {
+    return Promise.reject(new Error("Cart item not found"));
+  }
+
+  if (action === "increase") {
+    cartItem.quantity += 1;
+  } else if (action === "decrease") {
+    if (cartItem.quantity > 1) {
+      cartItem.quantity -= 1;
+    } else {
+      // Optionally, you can remove the item from the cart if quantity becomes 0
+      this.cart.items = this.cart.items.filter(
+        (item) => item.productId.toString() !== productId.toString()
+      );
+    }
+  } else {
+    return Promise.reject(new Error("Invalid action"));
+  }
+
+  return this.save();
+};
+
+module.exports = mongoose.model("User", userSchema);
 
 module.exports = mongoose.model("User", userSchema);

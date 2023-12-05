@@ -1,6 +1,6 @@
-extends ../layouts/main-layout.pug 
+extends ../layouts/main-layout.pug
 
-block styles 
+block styles
     link(rel="stylesheet", href="/css/cart.css")
 
 block content 
@@ -9,12 +9,30 @@ block content
             ul.cart-item-list
                 each p in products
                     li.cart-item
-                        h1= p.productId.title
-                        h2 Quantity: #{p.quantity}
-                        form(action="/cart-delete-item", method="POST")
-                            input(type="hidden", value=p.productId._id, name="productId")
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            button.btn.danger(type="submit") Delete
+                        div.cart-item-row
+                            div
+                                h1
+                                    - if (p.productId.title.length > 10)
+                                        | #{p.productId.title.slice(0, 10)}...
+                                    - else
+                                        | #{p.productId.title}
+                                h2
+                                    - if (String(p.productId.price * p.quantity).length > 10)
+                                        | $#{String(p.productId.price * p.quantity).slice(0, 10)}...
+                                    - else
+                                        | $#{p.productId.price * p.quantity}
+                            div.item-actions
+                                form(action="/cart-update-quantity", method="POST")
+                                    input(type="hidden", value=p.productId._id, name="productId")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    
+                                    button.scale2.dec(name="action", value="decrease") - 
+                                    span.quantity-display= p.quantity
+                                    button.scale.inc(name="action", value="increase") +
+                                form(action="/cart-delete-item", method="POST")
+                                    input(type="hidden", value=p.productId._id, name="productId")
+                                    input(type="hidden" name="_csrf" value=csrfToken)
+                                    button.btn.danger(type="submit") Delete
             hr
             .centered               
                 form(action="/create-order", method="POST")
@@ -22,4 +40,3 @@ block content
                     button.btn(type="submit") Order Now!
         else
             h1 No Products in Cart!
-

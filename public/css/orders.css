@@ -5,8 +5,13 @@
 }
 
 .orders-item h1 {
+  display: flex;
   margin: 0;
   font-size: 1rem;
+}
+
+.orders-item h3 {
+  align-self: flex-end;
 }
 
 .orders-item {
@@ -26,4 +31,8 @@
   padding: 0.5rem;
   border: 1px solid #00695c;
   color: #00695c;
+}
+
+h3 {
+  align-items: flex-end;
 }
