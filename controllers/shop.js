@@ -53,12 +53,20 @@ exports.getIndex = (req, res, next) => {
     });
 };
 
+function calculateTotalPrice(products) {
+  return products.reduce((total, p) => total + p.product.price * p.quantity, 0);
+}
+
 exports.getCart = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
       const products = user.cart.items;
+
+      // Attach calculateTotalPrice to res.locals
+      res.locals.calculateTotalPrice = calculateTotalPrice;
+
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
@@ -137,7 +145,20 @@ exports.postOrder = (req, res, next) => {
 };
 
 function calculateTotalPrice(products) {
-  return products.reduce((total, p) => total + p.product.price * p.quantity, 0);
+  if (!products || !products.length) {
+    return 0;
+  }
+
+  return products.reduce((total, p) => {
+    const productPrice = p.productId && p.productId.price;
+    const quantity = p.quantity;
+
+    if (productPrice !== undefined && quantity !== undefined) {
+      return total + productPrice * quantity;
+    }
+
+    return total;
+  }, 0);
 }
 
 // ... (existing code)
