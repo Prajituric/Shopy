@@ -174,14 +174,44 @@ function formatShortDate(date) {
 
 exports.getOrders = (req, res, next) => {
   Order.find({ "user.userId": req.user._id })
+    .populate("products.product")
     .then((orders) => {
+      console.log("Orders:", orders); // Log orders
+
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
-        orders: orders.map((order) => ({
-          ...order.toObject(),
-          createdAt: formatShortDate(order.createdAt),
-        })),
+        orders: orders.map((order) => {
+          const products = order.products.map((product) => {
+            console.log("Product:", product.product); // Log each product
+
+            // Check if product and product.title are defined
+            const title =
+              product.product && product.product.title
+                ? product.product.title
+                : "Unknown Product";
+
+            return {
+              title: title,
+              quantity: product.quantity,
+              total:
+                product.quantity *
+                ((product.product && product.product.price) || 0),
+            };
+          });
+
+          const totalPrice = products.reduce(
+            (total, product) => total + product.total,
+            0
+          );
+
+          return {
+            ...order.toObject(),
+            createdAt: formatShortDate(order.createdAt),
+            products: products,
+            totalPrice: totalPrice,
+          };
+        }),
         calculateTotalPrice: calculateTotalPrice,
         formatShortDate: formatShortDate,
       });

@@ -4,20 +4,23 @@
   margin: 0;
 }
 
-.orders-item h1 {
+.orders-item {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.orders-header {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.orders-header h1 {
   margin: 0;
   font-size: 1rem;
-}
-
-.orders-item h3 {
-  align-self: flex-end;
-}
-
-.orders-item {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
-  margin-bottom: 1rem;
 }
 
 .orders-product {
@@ -33,6 +36,25 @@
   color: #00695c;
 }
 
-h3 {
-  align-items: flex-end;
+h3.end {
+  margin: 1rem 0 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 700px) {
+  .orders-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .orders-header h1 {
+    order: 1; /* Change the order to make Order Date appear first */
+    margin-bottom: 0.5rem;
+  }
+
+  .orders-header h1:nth-child(2) {
+    margin-bottom: 1rem; /* Add margin back to the second h1 */
+  }
 }
