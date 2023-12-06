@@ -18,6 +18,5 @@ block content
                         ul.orders-products
                             each p in order.products
                                 li.orders-product-item
-                                    - console.log('Product Object:', p);
                                     | #{p.title} (#{p.quantity})
                         h3.end Total Order Price: $#{order.totalPrice.toFixed(2)}
