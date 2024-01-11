@@ -159,7 +159,7 @@ exports.postOrder = (req, res, next) => {
       return req.user.clearCart();
     })
     .then(() => {
-      res.redirect("/checkout");
+      res.redirect("/orders");
     })
     .catch((err) => console.log(err));
 };
@@ -293,79 +293,79 @@ exports.getInvoice = async (req, res, next) => {
   }
 };
 
-exports.getCheckout = async (req, res, next) => {
-  try {
-    const user = await req.user.populate("cart.items.productId").execPopulate();
+// exports.getCheckout = async (req, res, next) => {
+//   try {
+//     const user = await req.user.populate("cart.items.productId").execPopulate();
 
-    const products = user.cart.items;
-    let total = 0;
+//     const products = user.cart.items;
+//     let total = 0;
 
-    products.forEach((p) => {
-      total += p.quantity * p.productId.price;
-    });
+//     products.forEach((p) => {
+//       total += p.quantity * p.productId.price;
+//     });
 
-    const lineItems = products.map((p) => ({
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: p.productId.title,
-          description: p.productId.description,
-          images: [p.productId.imageUrl],
-        },
-        unit_amount: p.productId.price * 100,
-      },
-      quantity: p.quantity,
-    }));
+//     const lineItems = products.map((p) => ({
+//       price_data: {
+//         currency: "usd",
+//         product_data: {
+//           name: p.productId.title,
+//           description: p.productId.description,
+//           images: [p.productId.imageUrl],
+//         },
+//         unit_amount: p.productId.price * 100,
+//       },
+//       quantity: p.quantity,
+//     }));
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: lineItems,
-      mode: "payment",
-      success_url: `${req.protocol}://${req.get("host")}/checkout/success`,
-      cancel_url: `${req.protocol}://${req.get("host")}/checkout/cancel`,
-    });
+//     const session = await stripe.checkout.sessions.create({
+//       payment_method_types: ["card"],
+//       line_items: lineItems,
+//       mode: "payment",
+//       success_url: `${req.protocol}://${req.get("host")}/checkout/success`,
+//       cancel_url: `${req.protocol}://${req.get("host")}/checkout/cancel`,
+//     });
 
-    res.render("shop/checkout", {
-      path: "/checkout",
-      pageTitle: "Checkout",
-      products: products,
-      totalSum: total,
-      sessionId: session.id,
-    });
-  } catch (error) {
-    console.error("Error in getCheckout:", error);
-    const err = new Error("Failed to create Checkout session.");
-    err.httpStatusCode = 500;
-    return next(err);
-  }
-};
+//     res.render("shop/checkout", {
+//       path: "/checkout",
+//       pageTitle: "Checkout",
+//       products: products,
+//       totalSum: total,
+//       sessionId: session.id,
+//     });
+//   } catch (error) {
+//     console.error("Error in getCheckout:", error);
+//     const err = new Error("Failed to create Checkout session.");
+//     err.httpStatusCode = 500;
+//     return next(err);
+//   }
+// };
 
-exports.getCheckoutSuccess = (req, res, next) => {
-  req.user
-    .populate("cart.items.productId")
-    .execPopulate()
-    .then((user) => {
-      const products = user.cart.items.map((i) => {
-        return { quantity: i.quantity, product: { ...i.productId._doc } };
-      });
-      const order = new Order({
-        user: {
-          email: req.user.email,
-          userId: req.user,
-        },
-        products: products,
-      });
-      return order.save();
-    })
-    .then((result) => {
-      return req.user.clearCart();
-    })
-    .then(() => {
-      res.redirect("/orders");
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
-};
+// exports.getCheckoutSuccess = (req, res, next) => {
+//   req.user
+//     .populate("cart.items.productId")
+//     .execPopulate()
+//     .then((user) => {
+//       const products = user.cart.items.map((i) => {
+//         return { quantity: i.quantity, product: { ...i.productId._doc } };
+//       });
+//       const order = new Order({
+//         user: {
+//           email: req.user.email,
+//           userId: req.user,
+//         },
+//         products: products,
+//       });
+//       return order.save();
+//     })
+//     .then((result) => {
+//       return req.user.clearCart();
+//     })
+//     .then(() => {
+//       res.redirect("/orders");
+//     })
+//     .catch((err) => {
+//       const error = new Error(err);
+//       error.httpStatusCode = 500;
+//       return next(error);
+//     });
+// };

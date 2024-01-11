@@ -106,8 +106,8 @@ exports.postSignup = (req, res, next) => {
           email: email,
           password: hashedPassword,
           cart: { items: [] },
-          isVerified: false, 
-          verificationToken: verificationToken, 
+          isVerified: false,
+          verificationToken: verificationToken,
         });
         return user.save();
       })
@@ -119,7 +119,7 @@ exports.postSignup = (req, res, next) => {
           path: "/login",
           pageTitle: "Login",
           errorMessage: null,
-          successMessage: req.flash("success")[0], 
+          successMessage: req.flash("success")[0],
         });
       })
       .catch((err) => {

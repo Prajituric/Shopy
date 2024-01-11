@@ -39,6 +39,6 @@ block content
                     p Total Cart Price: $#{calculateCartTotalPrice(cartItems || [])}
                 form(action="/create-order", method="POST")
                     input(type="hidden", name="_csrf", value=csrfToken)
-                    button.btn.order(type="submit", onclick="window.location.href='/checkout'") Order Now!
+                    button.btn.order(type="submit") Order Now!
         else
             h1 No Products in Cart!
