@@ -1,0 +1,134 @@
+.cart-item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin: auto;
+  width: 60rem;
+  max-width: 90%;
+}
+
+.cart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items vertically */
+  padding: 1rem;
+  margin-top: 1rem; /* Add margin between block items */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+.cart-item .cart-item-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cart-item h1,
+.cart-item h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  text-align: left; /* Align text to the left */
+}
+
+.cart-item .item-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem; /* Adjust the margin as needed */
+}
+
+.cart-item button.scale2.dec,
+.cart-item button.scale.inc {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem; /* Adjust the margin as needed */
+}
+
+.btn.danger {
+  margin-left: 7rem;
+}
+
+.row-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.order {
+  margin-top: 0.6rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+p {
+  margin: 5px 10px;
+  font-size: 1.4rem;
+}
+
+.total-amount {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: 1px solid #333;
+  padding: 2px 5px 2px 5px;
+  margin-right: 7rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+}
+
+@media (max-width: 600px) {
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items vertically */
+    margin-top: 1rem; /* Add margin between block items */
+  }
+
+  .cart-item .cart-item-row {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-item .item-actions {
+    flex-direction: column;
+    margin-top: 1rem; /* Adjust the margin as needed */
+  }
+
+  .cart-item h1,
+  .cart-item h2 {
+    margin-right: 0; /* Remove margin for block items */
+    text-align: center; /* Center text horizontally */
+  }
+  .cart-item button.scale2.dec {
+    margin-right: 0.8rem;
+    margin-left: 0rem;
+  }
+  .cart-item button.scale.inc {
+    margin-left: 0.8rem;
+  }
+  .btn.danger {
+    margin-top: 1rem;
+    margin-left: auto;
+  }
+
+  .row-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .total-amount {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border: 0.5px solid #333;
+    margin-right: 0;
+    margin-bottom: 1rem;
+    margin-top: -1rem;
+  }
+
+  .total-amount p {
+    font-size: 1rem;
+  }
+
+  .order {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  }
+}
