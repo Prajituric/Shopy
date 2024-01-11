@@ -1,8 +1,13 @@
 const Product = require("../models/product");
 const Order = require("../models/order");
 const mongoose = require("mongoose");
+const PDFDocument = require("pdfkit");
 
 const User = require("../models/user");
+
+const stripe = require("stripe")(
+  "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"
+);
 
 exports.getProducts = (req, res, next) => {
   Product.find()
@@ -57,20 +62,35 @@ function calculateTotalPrice(products) {
   return products.reduce((total, p) => total + p.product.price * p.quantity, 0);
 }
 
+function calculateTotalPrice(products) {
+  return products.reduce((total, p) => total + p.product.price * p.quantity, 0);
+}
+
+function calculateCartTotalPrice(cartItems) {
+  return calculateTotalPrice(
+    cartItems.map((item) => ({
+      product: item.productId,
+      quantity: item.quantity,
+    }))
+  );
+}
+
 exports.getCart = (req, res, next) => {
   req.user
     .populate("cart.items.productId")
     .execPopulate()
     .then((user) => {
-      const products = user.cart.items;
+      const cartItems = user.cart.items;
 
-      // Attach calculateTotalPrice to res.locals
       res.locals.calculateTotalPrice = calculateTotalPrice;
+      res.locals.calculateCartTotalPrice = calculateCartTotalPrice;
+
+      console.log("Cart Items:", cartItems);
 
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: products,
+        cartItems: cartItems,
       });
     })
     .catch((err) => console.log(err));
@@ -130,7 +150,7 @@ exports.postOrder = (req, res, next) => {
           userId: req.user,
         },
         products: products,
-        createdAt: new Date(), // Set createdAt to the current date
+        createdAt: new Date(),
       });
 
       return order.save();
@@ -139,7 +159,7 @@ exports.postOrder = (req, res, next) => {
       return req.user.clearCart();
     })
     .then(() => {
-      res.redirect("/orders");
+      res.redirect("/checkout");
     })
     .catch((err) => console.log(err));
 };
@@ -150,7 +170,7 @@ function calculateTotalPrice(products) {
   }
 
   return products.reduce((total, p) => {
-    const productPrice = p.productId && p.productId.price;
+    const productPrice = p.product && p.product.price;
     const quantity = p.quantity;
 
     if (productPrice !== undefined && quantity !== undefined) {
@@ -161,14 +181,12 @@ function calculateTotalPrice(products) {
   }, 0);
 }
 
-// ... (existing code)
-
 function formatShortDate(date) {
   if (date) {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(date).toLocaleDateString(undefined, options);
   } else {
-    return "N/A"; // or any default value you prefer
+    return "N/A";
   }
 }
 
@@ -176,16 +194,15 @@ exports.getOrders = (req, res, next) => {
   Order.find({ "user.userId": req.user._id })
     .populate("products.product")
     .then((orders) => {
-      console.log("Orders:", orders); // Log orders
+      console.log("Orders:", orders);
 
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
         orders: orders.map((order) => {
           const products = order.products.map((product) => {
-            console.log("Product:", product.product); // Log each product
+            console.log("Product:", product.product);
 
-            // Check if product and product.title are defined
             const title =
               product.product && product.product.title
                 ? product.product.title
@@ -217,4 +234,138 @@ exports.getOrders = (req, res, next) => {
       });
     })
     .catch((err) => console.log(err));
+};
+
+exports.getInvoice = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+
+    const order = await Order.findById(orderId).populate("products.product");
+
+    if (!order) {
+      return res.status(404).send("Order not found");
+    }
+
+    const pdfDoc = new PDFDocument();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename=invoice-${orderId}.pdf`
+    );
+
+    pdfDoc.pipe(res);
+
+    pdfDoc
+      .fontSize(20)
+      .font("Helvetica-Bold")
+      .text(`Invoice`, { align: "center", underline: true })
+      .moveUp(-2);
+
+    pdfDoc
+      .fontSize(15)
+      .font("Helvetica")
+      .moveUp(-1)
+      .text(`Order No. ${orderId}`);
+    pdfDoc.moveUp(-1).text(`Order Date: - ${formatShortDate(order.createdAt)}`);
+    pdfDoc.moveUp(-1).text("Order Details:");
+
+    order.products.forEach((product) => {
+      const title = product.product ? product.product.title : "Unknown Product";
+      const quantity = product.quantity || 0;
+      const price = product.product ? product.product.price : 0;
+
+      pdfDoc.text(
+        `- ${title} (Quantity: ${quantity}) paid $${price.toFixed(2)} for each`
+      );
+    });
+
+    pdfDoc.moveUp(-1).text(`-----------------------------------------`);
+
+    const totalPrice = calculateTotalPrice(order.products);
+
+    pdfDoc
+      .font("Helvetica-Bold")
+      .text(`Total Order Price: $${totalPrice.toFixed(2)}`);
+
+    pdfDoc.end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getCheckout = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cart.items.productId").execPopulate();
+
+    const products = user.cart.items;
+    let total = 0;
+
+    products.forEach((p) => {
+      total += p.quantity * p.productId.price;
+    });
+
+    const lineItems = products.map((p) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: p.productId.title,
+          description: p.productId.description,
+          images: [p.productId.imageUrl],
+        },
+        unit_amount: p.productId.price * 100,
+      },
+      quantity: p.quantity,
+    }));
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `${req.protocol}://${req.get("host")}/checkout/success`,
+      cancel_url: `${req.protocol}://${req.get("host")}/checkout/cancel`,
+    });
+
+    res.render("shop/checkout", {
+      path: "/checkout",
+      pageTitle: "Checkout",
+      products: products,
+      totalSum: total,
+      sessionId: session.id,
+    });
+  } catch (error) {
+    console.error("Error in getCheckout:", error);
+    const err = new Error("Failed to create Checkout session.");
+    err.httpStatusCode = 500;
+    return next(err);
+  }
+};
+
+exports.getCheckoutSuccess = (req, res, next) => {
+  req.user
+    .populate("cart.items.productId")
+    .execPopulate()
+    .then((user) => {
+      const products = user.cart.items.map((i) => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          email: req.user.email,
+          userId: req.user,
+        },
+        products: products,
+      });
+      return order.save();
+    })
+    .then((result) => {
+      return req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect("/orders");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
