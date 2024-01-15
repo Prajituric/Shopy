@@ -5,9 +5,7 @@ const PDFDocument = require("pdfkit");
 
 const User = require("../models/user");
 
-const stripe = require("stripe")(
-  "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"
-);
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 exports.getProducts = (req, res, next) => {
   Product.find()
