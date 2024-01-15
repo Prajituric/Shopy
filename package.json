@@ -14,15 +14,13 @@
   },
   "author": "Prajituricul",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "2.0.22"
-  },
   "dependencies": {
     "@vscode/openssl-prebuilt": "^0.0.11",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
+    "nodemon": "2.0.22",
     "connect-mongodb-session": "^2.0.3",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.9.0",
