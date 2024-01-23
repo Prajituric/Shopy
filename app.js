@@ -13,7 +13,7 @@ const compression = require("compression");
 const errorController = require("./controllers/error");
 const User = require("./models/user");
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@cluster0.oopvnro.mongodb.net/${process.env.MONGO_DEF_DB}?retryWrites=true`;
+const MONGODB_URI = `mongodb+srv://userDB:rgkBQLIEPZYCWBFS@cluster0.oopvnro.mongodb.net/shop?retryWrites=true`;
 
 const app = express();
 const store = new MongoDBStore({
